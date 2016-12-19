@@ -42,7 +42,8 @@ public class RegisterServlet extends HttpServlet {
 		if(i!=0)
 		{
 			System.out.println("value inserted");
-			
+			request.setAttribute("msg","Registration successful, Login Here");
+			getServletContext().getRequestDispatcher("/Login.jsp").forward(request,response);
 		}
 		
 		else

@@ -2,6 +2,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -42,6 +43,30 @@ public class DaoMVC {
 			}catch(Exception e){}
 			return conn;
 		}
+
+	public static ResultSet loginUser(ModelMVC m, String sql) {
+		
+		ResultSet rs = null;
+		
+		Connection conn=connect();
+		try {
+			PreparedStatement ps= conn.prepareStatement(sql);
+			ps.setString(1,m.getUsername());
+			ps.setString(2,m.getPassword());
+			
+			rs=ps.executeQuery();
+		
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return rs;
+	}
 		
 		
 		
