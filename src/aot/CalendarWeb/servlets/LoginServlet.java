@@ -44,15 +44,16 @@ public class LoginServlet extends HttpServlet {
 			m.setPassword(password);
 			
 			String sql="select * from USERS where username=? and password=?";
-			
+			HttpSession session=request.getSession(); 
 			ResultSet rs=DaoMVC.loginUser(m,sql);
 			
 			try {
 				if(rs.next())
 				{
+					   
+				        session.setAttribute("idUsers",rs.getString(1));  
 					getServletContext().getRequestDispatcher("/index.jsp").forward(request,response);
-					  HttpSession session=request.getSession();  
-				        session.setAttribute("username",username);  
+				
 				}
 				else
 				{

@@ -43,7 +43,7 @@ public class RegisterServlet extends HttpServlet {
 		{
 			System.out.println("value inserted");
 			request.setAttribute("msg","Registration successful, Login Here");
-			getServletContext().getRequestDispatcher("/Login.jsp").forward(request,response);
+			getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
 		}
 		
 		else

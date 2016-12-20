@@ -21,75 +21,67 @@
 
 <script>
 $(document).ready(function() {
-	
+	var zone = "05:30";  
+
+
 	$('#calendar').fullCalendar({
 		header: {
 			left: 'prev,next today',
 			center: 'title',
 			right: 'month,basicWeek,basicDay'
 		},
-		defaultDate: '2016-12-12',
+		selectable:true,
+		selectHelper:true,
+		
+		select: function(start, end, allDay)
+		{
+			/*
+				after selection user will be promted for enter title for event.
+			*/
+			var title = prompt('Event Title:');
+		
+			/*
+				if title is enterd calendar will add title and event into fullCalendar.
+			*/
+			if (title)
+			{
+				
+				test={'title':title,'start':start,'end':end};
+			  	
+			  	$.ajax({
+			    	url: 'AddEvent',
+			    	data: 'title='+title+'&start='+start.format("YYYY-MM-DD HH:mm:SS")+'&zone='+zone+'&end='+end.format("YYYY-MM-DD[T]HH:mm:SS")+'&zone='+zone,
+			    	type: 'post',
+			    	dataType: 'json',
+			    	success: function(data){
+			    		
+			      console.log(data);
+			    	},
+			    	error: function(e){
+			      	console.log(e.responseText+"ERROR");
+			    	}
+			   });
+			  	$('#calendar').fullCalendar('renderEvent',
+						{
+							title: title,
+							start: start,
+							end: end,
+							allDay: allDay
+						},
+						true // make the event "stick"
+					);
+				
+			}
+			$('#calendar').fullCalendar('unselect');
+		},
 		navLinks: true, // can click day/week names to navigate views
 		editable: true,
 		eventLimit: true, // allow "more" link when too many events
-		events: [
-			{
-				title: 'All Day Event',
-				start: '2016-12-01'
-			},
-			{
-				title: 'Long Event',
-				start: '2016-12-07',
-				end: '2016-12-10'
-			},
-			{
-				id: 999,
-				title: 'Repeating Event',
-				start: '2016-12-09T16:00:00'
-			},
-			{
-				id: 999,
-				title: 'Repeating Event',
-				start: '2016-12-16T16:00:00'
-			},
-			{
-				title: 'Conference',
-				start: '2016-12-11',
-				end: '2016-12-13'
-			},
-			{
-				title: 'Meeting',
-				start: '2016-12-12T10:30:00',
-				end: '2016-12-12T12:30:00'
-			},
-			{
-				title: 'Lunch',
-				start: '2016-12-12T12:00:00'
-			},
-			{
-				title: 'Meeting',
-				start: '2016-12-12T14:30:00'
-			},
-			{
-				title: 'Happy Hour',
-				start: '2016-12-12T17:30:00'
-			},
-			{
-				title: 'Dinner',
-				start: '2016-12-12T20:00:00'
-			},
-			{
-				title: 'Birthday Party',
-				start: '2016-12-13T07:00:00'
-			},
-			{
-				title: 'Click for Google',
-				url: 'http://google.com/',
-				start: '2016-12-28'
-			}
-		]
+		events: "/CalendarWeb/UpdateServlet"
 	});
 	
+	 
+	 
 });
 </script>
 <style>
@@ -97,11 +89,77 @@ $(document).ready(function() {
 		max-width: 900px;
 		margin: 0 auto;
 	}
+	
+	#external-events {
+		float: left;
+		width: 150px;
+		padding: 0 10px;
+		border: 1px solid #ccc;
+		background: #eee;
+		text-align: left;
+	}
+		
+	#external-events h4 {
+		font-size: 16px;
+		margin-top: 0;
+		padding-top: 1em;
+	}
+		
+	#external-events .fc-event {
+		margin: 10px 0;
+		cursor: pointer;
+	}
+		
+	#external-events p {
+		margin: 1.5em 0;
+		font-size: 11px;
+		color: #666;
+	}
+		
+	#external-events p input {
+		margin: 0;
+		vertical-align: middle;
+	}
+	
 </style>
 </head>
 <body>
+<%
+String idUsers=(String)session.getAttribute("idUsers");
+
+%>
+Welcome :: ${idUsers}
 <a href="LogoutServlet">Logout</a>|
-<div id='calendar'></div>
+
+<form action="ShareServlet" method="POST">
+<table>
+<tr>
+<td>Enter the ID of the person you want to share your calendar with</td>
+<td><input type='text' name='id_user'></td>
+</tr>
+<tr>
+<td><input type='submit' value='Share'></td>
+</tr>
+
+</table>
+</form>
+<br>
+<br>
+<form action="ViewShareServlet" method="POST">
+<table>
+<tr>
+<td>View Calendars that were shared with you</td>
+
+</tr>
+<tr>
+<td><input type='submit' value='View'></td>
+</tr>
+
+</table>
+</form>
+
+<div id='calendar'>
+</div>
  
 
  

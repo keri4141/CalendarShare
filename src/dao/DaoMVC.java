@@ -44,6 +44,48 @@ public class DaoMVC {
 			return conn;
 		}
 
+	
+	public static void UpdateCalendar(String sql,String param1,String param2,String param3,String param4)
+	{
+		Connection conn=connect();
+		try {
+			PreparedStatement ps=conn.prepareStatement(sql);
+			ps.setString(1,param1);
+			ps.setString(2,param2);
+			ps.setString(3,param3);
+			ps.setString(4,param4);
+			ps.execute();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static ResultSet RetrieveCalendar(String sql)
+	{
+		ResultSet rs = null;
+		
+		Connection conn=connect();
+		try {
+			PreparedStatement ps= conn.prepareStatement(sql);
+			
+			
+			rs=ps.executeQuery();
+		
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		return rs;
+		
+		
+	}
+	
 	public static ResultSet loginUser(ModelMVC m, String sql) {
 		
 		ResultSet rs = null;
@@ -66,6 +108,22 @@ public class DaoMVC {
 		
 		
 		return rs;
+	}
+
+	public static void Share(String sql,String param1, String param2) {
+		Connection conn=connect();
+		try {
+			PreparedStatement ps=conn.prepareStatement(sql);
+			ps.setString(1,param1);
+			ps.setString(2,param2);
+			
+			ps.execute();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 		
 		

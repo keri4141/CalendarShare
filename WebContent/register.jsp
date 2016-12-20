@@ -38,12 +38,5 @@ REGISTER
 </form>
 
 
-
-
-
-</table>
-
-</form>
-
 </body>
 </html>
