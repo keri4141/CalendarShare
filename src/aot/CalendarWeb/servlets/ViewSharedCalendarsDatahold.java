@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class ViewShareServlet
+ * Servlet implementation class viewSharedCalendarsDatahold
  */
-@WebServlet("/ViewShareServlet")
-public class ViewShareServlet extends HttpServlet {
+@WebServlet("/ViewSharedCalendarsDatahold")
+public class ViewSharedCalendarsDatahold extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -27,7 +27,10 @@ public class ViewShareServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getServletContext().getRequestDispatcher("/ViewSharedUsers.jsp").forward(request,response);
+		String id_usershared = request.getParameter("id_usershared");
+		HttpSession session=request.getSession();
+		session.setAttribute("id_usershared",id_usershared);
+		getServletContext().getRequestDispatcher("/ViewSharedCalendars.jsp").forward(request,response);
 	}
 
 }

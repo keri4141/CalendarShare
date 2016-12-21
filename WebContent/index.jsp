@@ -22,8 +22,17 @@
 <script>
 $(document).ready(function() {
 	var zone = "05:30";  
+	
+	var currentMousePos = {
+		  	x: -1,
+		  	y: -1
+		};
 
-
+		  	jQuery(document).on("mousemove", function (event) {
+		   currentMousePos.x = event.pageX;
+		   currentMousePos.y = event.pageY;
+		});
+		  	
 	$('#calendar').fullCalendar({
 		header: {
 			left: 'prev,next today',
@@ -74,13 +83,50 @@ $(document).ready(function() {
 			}
 			$('#calendar').fullCalendar('unselect');
 		},
+		eventDragStop: function (event, jsEvent, ui, view) {
+			   if (isElemOverDiv()) {
+			     var con = confirm('Are you sure to delete this event permanently?');
+			     if(con == true) {
+			      	$.ajax({
+			        	url: 'DeleteEventServlet',
+			        	data: 'eventid='+event.id,
+			        	type: 'POST',
+			        	dataType: 'json',
+			        	success: function(data){
+			          	
+			            	$('#calendar').fullCalendar('removeEvents');
+			            	
+			        	},
+			        	error: function(e){
+			        	alert('Error processing your request: '+e.responseText);
+			        	}
+			       });
+			    	}
+			  	}
+			},
 		navLinks: true, // can click day/week names to navigate views
 		editable: true,
 		eventLimit: true, // allow "more" link when too many events
 		events: "/CalendarWeb/UpdateServlet"
 	});
 	
-	 
+	function isElemOverDiv() {
+        var trashEl = jQuery('#trash');
+
+        var ofs = trashEl.offset();
+
+        var x1 = ofs.left;
+        var x2 = ofs.left + trashEl.outerWidth(true);
+        var y1 = ofs.top;
+        var y2 = ofs.top + trashEl.outerHeight(true);
+
+        if ((currentMousePos.x >= x1 && currentMousePos.x <= x2) &&
+            currentMousePos.y >= y1 && currentMousePos.y <= y2) {
+            return true;
+        }
+        return false;
+    }
+ 
 	 
 });
 </script>
@@ -121,6 +167,14 @@ $(document).ready(function() {
 		vertical-align: middle;
 	}
 	
+	
+	#trash{
+		width:50px;
+		height:50px;
+		float:left;
+		padding-bottom: 15px;
+		position: relative;
+	}
 </style>
 </head>
 <body>
@@ -146,22 +200,22 @@ Welcome :: ${idUsers}
 <br>
 <br>
 <form action="ViewShareServlet" method="POST">
-<table>
-<tr>
-<td>View Calendars that were shared with you</td>
-
-</tr>
-<tr>
-<td><input type='submit' value='View'></td>
-</tr>
-
-</table>
+	<table>
+		<tr>
+			<td>View Calendars that were shared with you</td>
+			
+		</tr>
+		<tr>
+			<td><input type='submit' value='View'></td>
+		</tr>
+	
+	</table>
 </form>
+
+<div id="trash"> TRASH</div>
 
 <div id='calendar'>
 </div>
- 
-
  
 
 </body>
