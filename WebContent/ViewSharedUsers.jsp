@@ -32,17 +32,15 @@ try{
 Statement statement = null;
 ResultSet resultSet = null;
 %>
-<h2 align="center"><font><strong>Retrieve data from database in jsp</strong></font></h2>
+<h2 align="center"><font><strong>View Calendars that were shared with you</strong></font></h2>
 <table align="center" cellpadding="5" cellspacing="5" border="1">
 <tr>
 
 </tr>
-<tr bgcolor="#A52A2A">
+<tr bgcolor="#FFFFF">
 <td><b>id</b></td>
-<td><b>user_id</b></td>
-<td><b>Password</b></td>
-<td><b>Name</b></td>
-<td><b>Email</b></td>
+<td><b>View Calendar</b></td>
+
 </tr>
 <%
 try{ 
@@ -55,7 +53,7 @@ resultSet = statement.executeQuery(sql);
 while(resultSet.next()){
 %>
 
-<tr bgcolor="#DEB887">
+<tr bgcolor="#FFFFF">
 
 <td><%=resultSet.getString("id_usershared") %></td>
 <td>

@@ -75,13 +75,15 @@ public class UpdateServlet extends HttpServlet {
 		
 		
 		//if the user moved an event
-		if(type.equals("moveUpdate"))
+		if(type.equals("moveUpdate") || type.equals("resize"))
 		{
 			String sql = "UPDATE Calendar SET title=?,start=?,end=? WHERE id=?";
 			
 			DaoMVC.moveUpdateCalendar(sql,title,start,end,id);
 			
 		}
+		
+		
 		//regular events loadup from DB
 		else
 		{

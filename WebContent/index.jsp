@@ -3,17 +3,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>Insert title here</title>
 
 
- 
+   <script src="js/react.min.js" charset="utf-8"></script>
+    <script src="js/react-dom.min.js" charset="utf-8"></script>
+    <script src="js/browser.min.js" charset="utf-8"></script>
 
- 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-    
+ <!--  
+<script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+    -->
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
@@ -21,7 +23,7 @@
 
 <script>
 $(document).ready(function() {
-	var zone = "05:30";  
+	 
 	
 	var currentMousePos = {
 		  	x: -1,
@@ -106,6 +108,25 @@ $(document).ready(function() {
 			    	}
 			  	}
 			},
+			eventResize: function(event, delta, revertFunc) {
+				 var title = event.title;
+				   var start = event.start;
+				   var end = event.end;
+				   var type= "resize";
+		        $.ajax({
+					url: 'UpdateServlet',
+					data: 'type='+type+'&eventid='+event.id+'&title='+title+'&start='+start.format("YYYY-MM-DD HH:mm:SS")+'&end='+end.format("YYYY-MM-DD[T]HH:mm:SS"),
+					type: 'POST',
+					dataType: 'json',
+					success: function(response){
+						//if(response.status != 'success')		    				
+						revertFunc();
+					},
+					error: function(e){		    			
+						
+					}
+				});
+		    },
 			eventDrop: function(event, delta, revertFunc) {
 				   var title = event.title;
 				   var start = event.start;
@@ -117,11 +138,11 @@ $(document).ready(function() {
 				    	type: 'POST',
 				    	dataType: 'json',
 				    	success: function(response){
-				      	//if(response.status != 'success')
+				      
 				      	revertFunc();
 				    	},
 				    	error: function(e){
-				      	//revertFunc();
+				      	;
 				      	
 				    	}
 				    	});
@@ -131,7 +152,7 @@ $(document).ready(function() {
 		eventLimit: true, // allow "more" link when too many events
 		events: "/CalendarWeb/UpdateServlet"
 	});
-	
+	//if grabbed events are hovering over trash can div
 	function isElemOverDiv() {
         var trashEl = jQuery('#trash');
 
@@ -158,42 +179,12 @@ $(document).ready(function() {
 		margin: 0 auto;
 	}
 	
-	#external-events {
-		float: left;
-		width: 150px;
-		padding: 0 10px;
-		border: 1px solid #ccc;
-		background: #eee;
-		text-align: left;
-	}
-		
-	#external-events h4 {
-		font-size: 16px;
-		margin-top: 0;
-		padding-top: 1em;
-	}
-		
-	#external-events .fc-event {
-		margin: 10px 0;
-		cursor: pointer;
-	}
-		
-	#external-events p {
-		margin: 1.5em 0;
-		font-size: 11px;
-		color: #666;
-	}
-		
-	#external-events p input {
-		margin: 0;
-		vertical-align: middle;
-	}
-	
-	
+
 	#trash{
-		width:50px;
-		height:50px;
+		width:100px;
+		height:100px;
 		float:left;
+		background-color:red;
 		padding-bottom: 15px;
 		position: relative;
 	}
@@ -204,23 +195,25 @@ $(document).ready(function() {
 String idUsers=(String)session.getAttribute("idUsers");
 
 %>
-Welcome :: ${idUsers}
+Welcome, your ID is: ${idUsers}<br>
 <a href="LogoutServlet">Logout</a>|
 
 <form action="ShareServlet" method="POST">
-<table>
-<tr>
-<td>Enter the ID of the person you want to share your calendar with</td>
-<td><input type='text' name='id_user'></td>
-</tr>
-<tr>
-<td><input type='submit' value='Share'></td>
-</tr>
-
-</table>
+	<table>
+	<tr>
+		<td>Enter the ID of the person you want to share your calendar with</td>
+		<td><input type='text' name='id_user'></td>
+	</tr>
+	<tr>
+		<td><input type='submit' value='Share'></td>
+	</tr>
+	
+	</table>
 </form>
+
 <br>
 <br>
+
 <form action="ViewShareServlet" method="POST">
 	<table>
 		<tr>
@@ -233,8 +226,14 @@ Welcome :: ${idUsers}
 	
 	</table>
 </form>
+<br><br>
+
 
 <div id="trash"> TRASH</div>
+<script type="text/babel">
+
+
+</script>
 
 <div id='calendar'>
 </div>
