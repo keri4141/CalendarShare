@@ -42,6 +42,7 @@ $(document).ready(function() {
 		selectable:true,
 		selectHelper:true,
 		
+		//click on a box to create event
 		select: function(start, end, allDay)
 		{
 			/*
@@ -83,6 +84,7 @@ $(document).ready(function() {
 			}
 			$('#calendar').fullCalendar('unselect');
 		},
+		//When event is over trash div, it deletes the event
 		eventDragStop: function (event, jsEvent, ui, view) {
 			   if (isElemOverDiv()) {
 			     var con = confirm('Are you sure to delete this event permanently?');
@@ -94,16 +96,36 @@ $(document).ready(function() {
 			        	dataType: 'json',
 			        	success: function(data){
 			          	
-			            	$('#calendar').fullCalendar('removeEvents');
+			            	$('#calendar').fullCalendar('refetchEvents'); //refetch updates calendar
 			            	
 			        	},
 			        	error: function(e){
-			        	alert('Error processing your request: '+e.responseText);
+			        		$('#calendar').fullCalendar('refetchEvents');
 			        	}
 			       });
 			    	}
 			  	}
 			},
+			eventDrop: function(event, delta, revertFunc) {
+				   var title = event.title;
+				   var start = event.start;
+				   var end = event.end;
+				   var type= "moveUpdate";
+				   $.ajax({
+				    	url: 'UpdateServlet',
+				    	data: 'type='+type+'&eventid='+event.id+'&title='+title+'&start='+start.format("YYYY-MM-DD HH:mm:SS")+'&end='+end.format("YYYY-MM-DD[T]HH:mm:SS"),
+				    	type: 'POST',
+				    	dataType: 'json',
+				    	success: function(response){
+				      	//if(response.status != 'success')
+				      	revertFunc();
+				    	},
+				    	error: function(e){
+				      	//revertFunc();
+				      	
+				    	}
+				    	});
+				},
 		navLinks: true, // can click day/week names to navigate views
 		editable: true,
 		eventLimit: true, // allow "more" link when too many events

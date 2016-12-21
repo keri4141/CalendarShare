@@ -125,6 +125,41 @@ public class DaoMVC {
 		}
 		
 	}
+
+	public static void DeleteEvent(String sql, String id) {
+		Connection conn=connect();
+		
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,id);
+			ps.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+	}
+
+	public static void moveUpdateCalendar(String sql, String title,
+											String start, String end, String id) {
+Connection conn=connect();
+		
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,title);
+			ps.setString(2,start);
+			ps.setString(3,end);
+			ps.setString(4,id);
+			ps.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 		
 		
 		

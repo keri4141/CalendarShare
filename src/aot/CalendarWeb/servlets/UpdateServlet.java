@@ -19,6 +19,8 @@ import org.json.JSONObject;
 
 
 
+
+
 import dao.DaoMVC;
 
 /**
@@ -32,6 +34,9 @@ public class UpdateServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
 		HttpSession session=request.getSession(); 
 		String sql = "SELECT * FROM Calendar WHERE id_user="+session.getAttribute("idUsers");
 		ResultSet rs=DaoMVC.RetrieveCalendar(sql);
@@ -42,17 +47,7 @@ public class UpdateServlet extends HttpServlet {
         response.setContentType("application/json"); 
         PrintWriter out = response.getWriter(); 
            
-        /* JSONObject obj = new JSONObject();
-        try {
-			obj.put("events",convertToJSON(rs));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-       */
+     
         JSONArray s;
 		try {
 			s = convertToJSON(rs);
@@ -61,9 +56,7 @@ public class UpdateServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-       // String json = new Gson().toJson(obj);
-      // json = "[" + json + "]";
-       // response.getWriter().write(json);
+      
 	}
 
 	/**
@@ -71,39 +64,48 @@ public class UpdateServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session=request.getSession(); 
-		String sql = "SELECT * FROM Calendar WHERE id_user="+session.getAttribute("idUsers");
-		ResultSet rs=DaoMVC.RetrieveCalendar(sql);
-		
 
-       
-        response.setCharacterEncoding("utf8");
-        response.setContentType("application/json"); 
-        PrintWriter out = response.getWriter(); 
-           
-       /* JSONObject obj = new JSONObject();
-        try {
-			obj.put("events",convertToJSON(rs));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		HttpSession session=request.getSession(); 
+		
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		String title = request.getParameter("title");
+		String id = request.getParameter("eventid");
+		String type=request.getParameter("type");
+		
+		
+		//if the user moved an event
+		if(type.equals("moveUpdate"))
+		{
+			String sql = "UPDATE Calendar SET title=?,start=?,end=? WHERE id=?";
+			
+			DaoMVC.moveUpdateCalendar(sql,title,start,end,id);
+			
 		}
-       */
-        JSONArray s;
-		try {
-			s = convertToJSON(rs);
-			 out.print(s);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//regular events loadup from DB
+		else
+		{
+			
+		
+			String sql = "SELECT * FROM Calendar WHERE id_user="+session.getAttribute("idUsers");
+			ResultSet rs=DaoMVC.RetrieveCalendar(sql);
+			
+	
+	       
+	        response.setCharacterEncoding("utf8");
+	        response.setContentType("application/json"); 
+	        PrintWriter out = response.getWriter(); 
+	           
+	     
+	        JSONArray s;
+			try {
+				s = convertToJSON(rs);
+				 out.print(s);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-       
-        //String json = new Gson().toJson(obj);
-        //json = "[" + json + "]";
-        //response.getWriter().write(json);
 	
 	}
 	
