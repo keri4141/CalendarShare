@@ -17,6 +17,8 @@
 <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
     -->
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.7/react-bootstrap.min.js"></script>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css">
@@ -194,6 +196,51 @@ class App extends React.Component
 
 }
 ReactDOM.render(<App />,document.getElementById('app'));
+
+
+
+// NAVBAR STARTS HERE
+
+var Navbar = ReactBootstrap.Navbar;
+var FormGroup= ReactBootstrap.FormGroup;
+var Button = ReactBootstrap.Button;
+var FormControl = ReactBootstrap.FormControl;
+var Form= ReactBootstrap.Form;
+const navbarInstance = (
+  <Navbar>
+    <Navbar.Header>
+		
+      <Navbar.Brand>
+     	Share with a user by typing their ID
+      </Navbar.Brand>
+      <Navbar.Toggle />
+    </Navbar.Header>
+    <Navbar.Collapse>
+      <Navbar.Form pullLeft>
+			<Form action="ShareServlet" method="POST">
+        <FormGroup >
+          <FormControl type='text' name='id_user' placeholder="Share With" />
+        </FormGroup>
+        {' '}
+        <Button type="submit">Submit</Button>
+		</Form>
+      </Navbar.Form>
+<Navbar.Brand>
+     	View users who shared with you
+      </Navbar.Brand>
+		<Navbar.Form pullLeft>
+			<Form action="ViewShareServlet" method="POST">
+       
+        <Button type="submit">View</Button>
+		</Form>
+      </Navbar.Form>
+    </Navbar.Collapse>
+  </Navbar>
+);
+
+ReactDOM.render(navbarInstance, test);
+
+
 </script>
 <script>
 /*
@@ -362,44 +409,16 @@ $(document).ready(function() {
 </style>
 </head>
 <body>
+<div id="test"></div>
 <%
 String idUsers=(String)session.getAttribute("idUsers");
 
 %>
 Welcome, your ID is: ${idUsers}<br>
+
 <a href="LogoutServlet">Logout</a>|
-
-<form action="ShareServlet" method="POST">
-	<table>
-	<tr>
-		<td>Enter the ID of the person you want to share your calendar with</td>
-		<td><input type='text' name='id_user'></td>
-	</tr>
-	<tr>
-		<td><input type='submit' value='Share'></td>
-	</tr>
-	
-	</table>
-</form>
-
-<br>
-<br>
-
-<form action="ViewShareServlet" method="POST">
-	<table>
-		<tr>
-			<td>View Calendars that were shared with you</td>
-			
-		</tr>
-		<tr>
-			<td><input type='submit' value='View'></td>
-		</tr>
-	
-	</table>
-</form>
 <br><br>
-
-
+<br><br>
 <div id="trash"> TRASH</div>
 <script type="text/babel">
 
