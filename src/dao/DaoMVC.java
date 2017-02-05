@@ -9,6 +9,7 @@ import java.util.Properties;
 import model.ModelMVC;
 public class DaoMVC {
 
+	//Registers the user into the database
 	public static int registerUser(ModelMVC m, String sql)
 	{
 		int i =0;
@@ -28,6 +29,45 @@ public class DaoMVC {
 		
 	return i;
 	}
+	
+	//Checks if a username is taken or not
+	public static boolean usernameCheck(String sql,String username)
+	{
+		boolean userExistance=false;
+		ResultSet rs = null;
+		int count=0;
+		
+		Connection conn=connect();
+		try {
+			PreparedStatement ps= conn.prepareStatement(sql);
+			ps.setString(1, username);
+			
+			rs=ps.executeQuery();
+			
+		while(rs.next())
+		{	
+			
+			count++; //counts how many rows exist in the database
+		}
+		if(count>0) 
+		{
+			userExistance=true;
+		}
+		
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		
+		return userExistance;
+		
+	}
 
 	private static Connection connect() {
 		Connection conn = null;
@@ -44,7 +84,7 @@ public class DaoMVC {
 			return conn;
 		}
 
-	
+	//updates the user's calendar
 	public static void UpdateCalendar(String sql,String param1,String param2,String param3,String param4)
 	{
 		Connection conn=connect();
@@ -61,6 +101,7 @@ public class DaoMVC {
 			e.printStackTrace();
 		}
 	}
+	//Retrieve's a users calendar
 	public static ResultSet RetrieveCalendar(String sql)
 	{
 		ResultSet rs = null;
@@ -86,6 +127,7 @@ public class DaoMVC {
 		
 	}
 	
+	//Login 
 	public static ResultSet loginUser(ModelMVC m, String sql) {
 		
 		ResultSet rs = null;
@@ -110,6 +152,7 @@ public class DaoMVC {
 		return rs;
 	}
 
+	//updates the share Table after a user shares a calendar with another user
 	public static void Share(String sql,String param1, String param2) {
 		Connection conn=connect();
 		try {
@@ -125,7 +168,7 @@ public class DaoMVC {
 		}
 		
 	}
-
+//Remove an event from database
 	public static void DeleteEvent(String sql, String id) {
 		Connection conn=connect();
 		
@@ -141,7 +184,7 @@ public class DaoMVC {
 	
 		
 	}
-
+	//after moving an event the database will update according to the date on event
 	public static void moveUpdateCalendar(String sql, String title,
 											String start, String end, String id) {
 Connection conn=connect();

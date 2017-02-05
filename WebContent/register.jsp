@@ -88,6 +88,7 @@ ReactDOM.render(formInstance, document.getElementById("Registration"));
 
 <body>
 <div id="containment">
+${msg}
 <center>Registration Page
 
 <br><br>

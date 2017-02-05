@@ -35,22 +35,37 @@ public class RegisterServlet extends HttpServlet {
 		m.setUsername(username);
 		m.setPassword(password);
 	
-		//call a method to insert data to table
-		String sql="insert into USERS(username,password) values(?,?)";
-		int i = DaoMVC.registerUser(m,sql);
+		//check if username exists in database
+		String sqlUserNameCheck="SELECT * from USERS WHERE username=?";
+		boolean userExistance=DaoMVC.usernameCheck(sqlUserNameCheck,username);
 		
-		if(i!=0)
+		//user doesnt exist yet
+		if(userExistance==false)
 		{
-			System.out.println("value inserted");
-			request.setAttribute("msg","Registration successful, Login Here");
-			getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
-		}
 		
+		
+			//call a method to insert data to table
+			String sql="insert into USERS(username,password) values(?,?)";
+			int i = DaoMVC.registerUser(m,sql);
+			
+			if(i!=0)
+			{
+				System.out.println("value inserted");
+				request.setAttribute("msg","Registration successful, Login Here");
+				getServletContext().getRequestDispatcher("/login.jsp").forward(request,response);
+			}
+			
+			else
+			{
+				System.out.println("Value not inserted");
+			}
+		}
+		//username exists already
 		else
 		{
-			System.out.println("Value not inserted");
+			request.setAttribute("msg","Username Taken Please choose a different one");
+			getServletContext().getRequestDispatcher("/register.jsp").forward(request,response);
 		}
-		
 	}
 	
 
